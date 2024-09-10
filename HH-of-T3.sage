@@ -1,3 +1,10 @@
+import logging
+
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level='INFO') # options: DEBUG, INFO, WARN, ERROR, CRITICAL
+
+
 def W_rep(sigma):
     """
     Makes a matrix representation of the Weyl group on the basis lattice.
@@ -75,7 +82,16 @@ def try_all_conjugacy_classes(gamma,n,take_coinvariants=True):
     """
     conjugacy_classes = [cc.an_element() for cc in SymmetricGroup(n).conjugacy_classes()]
 
-    for s in conjugacy_classes:
-        print(s, "\n", get_cokernel(gamma,s,take_coinvariants=take_coinvariants))
+    cokernels = [
+            {'partition':s, 'homology': get_cokernel(gamma,s,take_coinvariants)}
+            for s in conjugacy_classes
+            ]
+    for co in cokernels:
+        logger.debug("{0} - {1}".format(co['partition'],co['homology']))
 
+    # compute dimensions
+    for co in cokernels:
+        co['dim'] = co['homology'].cardinality()
+        co['torsion_dim'] = sum(co['homology'].invariants())
+    return cokernels
 
