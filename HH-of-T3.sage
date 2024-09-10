@@ -99,8 +99,15 @@ def try_all_conjugacy_classes(gamma,n,take_coinvariants=True):
     # compute dimensions
     for co in cokernels:
         co['dim'] = co['homology'].cardinality()
-        co['torsion_dim'] = sum(co['homology'].invariants())
+        co['torsion_dim'] = max(1,sum(co['homology'].invariants()))
     return cokernels
+
+def dim_skeinmod(gamma,n):
+    cokernels = try_all_conjugacy_classes(gamma,n,take_coinvariants=True)
+    sum = 0
+    for co in cokernels:
+        sum += co['torsion_dim']
+    return sum
 
 def change_ring(module,R=QQ):
     """
