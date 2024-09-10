@@ -101,6 +101,7 @@ def try_all_conjugacy_classes(gamma,n,take_coinvariants=True):
         co['dim'] = co['homology'].cardinality()
         co['torsion_dim'] = sum(co['homology'].invariants())
     return cokernels
+    #blablabla
 
 def change_ring(module,R=QQ):
     """
