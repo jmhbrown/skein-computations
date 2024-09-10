@@ -59,7 +59,7 @@ def get_cokernel(gamma,sigma,take_coinvariants=True):
     sage: gamma = SL2Z.0
     sage: sigma = SymmetricGroup(5).an_element()
     sage: sigma = SymmetricGroup(5)((1,3,4))
-    sage: get_coinvariants(gamma,sigma)
+    sage: get_cokernel(gamma,sigma)
     Finitely generated module V/W over Integer Ring with invariants (2, 2)
     """
     n = sigma.parent().degree()
