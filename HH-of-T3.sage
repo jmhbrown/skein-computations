@@ -67,18 +67,25 @@ def get_cokernel(gamma,sigma,take_coinvariants=True):
 
     lattice = FreeModule(ZZ,2*n)
 
-    sublattice_gens = (Matrix.identity(2*n) - W_rep(sigma)*MCG_rep(gamma,n)).columns()
+    M = (Matrix.identity(2*n) - W_rep(sigma)*MCG_rep(gamma,n))
+    U = M.right_kernel()
+    List = U.gens()
+    if List == ():
+        List=lattice.zero()
+    
+    omega_on_U = omega*Matrix(List).transpose()
+    
+    Uperp = omega_on_U.left_kernel()
+    
+    sublattice_gens = M.columns()
+    
     if take_coinvariants:
         for tau in SymmetricGroup(n).centralizer(sigma):
-            sublattice_gens += (Matrix.identity(2*n) - W_rep(tau)).columns()
+            sublattice_gens += [(Matrix.identity(2*n) - W_rep(tau))*v for v in Uperp.gens()]
 
     submodule = lattice.submodule(sublattice_gens)
-    logger.info("Full submodule: {}".format(submodule))
-    row_space = (submodule.basis_matrix()).right_kernel()
-    logger.info("Row space: {}".format(row_space))
-    logger.info("Restricted quotient: {}".format(row_space.quotient(submodule.intersection(row_space))))
-
-    return lattice.quotient(submodule)
+                 
+    return Uperp.quotient(submodule)
 
 
 def try_all_conjugacy_classes(gamma,n,take_coinvariants=True):
@@ -122,3 +129,14 @@ def change_ring(module,R=QQ):
     """
 
     return module.V().change_ring(R).quotient(module.W().change_ring(R))
+
+def Monica_table(L,n):
+    """
+    sage: gamma = SL2Z.1^4
+    sage: try_all_conjugacy_classes(gamma,5)
+
+    """
+    conjugacy_classes = [cc.an_element() for cc in SymmetricGroup(n).conjugacy_classes()]
+    
+    return table([[conjugacy_classes[0]] + conjugacy_classes] + [[l] + [get_cokernel(l,sigma).invariants() for sigma in conjugacy_classes] for l in L])
+
