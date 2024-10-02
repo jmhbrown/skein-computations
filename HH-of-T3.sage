@@ -106,7 +106,7 @@ def try_all_conjugacy_classes(gamma,n,take_coinvariants=True):
     # compute dimensions
     for co in cokernels:
         co['dim'] = co['homology'].cardinality()
-        co['torsion_dim'] = max(1,sum(co['homology'].invariants()))
+        co['torsion_dim'] = product(co['homology'].invariants())
     return cokernels
 
 def dim_skeinmod(gamma,n):
