@@ -140,3 +140,13 @@ def Monica_table(L,n):
     
     return table([[conjugacy_classes[0]] + conjugacy_classes] + [[l] + [get_cokernel(l,sigma).invariants() for sigma in conjugacy_classes] for l in L])
 
+
+def Blurange_table(L,n=8):
+    """
+    Parameters:
+        L a vector of gammas in SL2
+        n: table for GL_i from 1 to n
+    Returns:
+        table nxdim(L) of the dimension of the gamma-twisted skein modules in GL_i
+    """
+    return table([[l] + [dim_skeinmod(l,i) for i in IntegerRange(1,n+1)] for l in L], header_row=[i for i in IntegerRange(0,n+1)], frame = True)
