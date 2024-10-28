@@ -150,3 +150,23 @@ def Blurange_table(L,n=8):
         table nxdim(L) of the dimension of the gamma-twisted skein modules in GL_i
     """
     return table([[l] + [dim_skeinmod(l,i) for i in IntegerRange(1,n+1)] for l in L], header_row=[i for i in IntegerRange(0,n+1)], frame = True)
+
+
+def get_dim_empty_skein ( gamma ):
+    I = matrix (ZZ , 2 , [1 , 0 , 0 , 1])
+    D_plus , U_plus , V_plus = (I - gamma ). smith_form ()
+    a_plus = [a for a in D_plus . diagonal () if a != 0]
+    D_minus , U_minus , V_minus = (I + gamma ). smith_form ()
+    a_minus = [a for a in D_minus. diagonal() if a != 0]
+    p_plus = len ([ a for a in a_plus if a %2 == 0])
+    p_minus = len ([ a for a in a_minus if a %2 == 0])
+    return (prod(a_plus)+2**(p_plus))/2+(prod(a_minus)) + 2**(p_minus)/2
+
+def Patrick_dim_GL2_skein_table(L):
+    """
+    Parameters:
+        L a vector of gammas in SL2
+    Returns:
+        table dim(L) of the dimension of the gamma-twisted skein modules in GL_2 according to Patrick's paper
+    """
+    return table([[l] + [get_dim_empty_skein(l)] for l in L], frame = True)
