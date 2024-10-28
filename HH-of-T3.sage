@@ -160,7 +160,7 @@ def get_dim_empty_skein ( gamma ):
     a_minus = [a for a in D_minus. diagonal() if a != 0]
     p_plus = len ([ a for a in a_plus if a %2 == 0])
     p_minus = len ([ a for a in a_minus if a %2 == 0])
-    return (prod(a_plus)+2**(p_plus))/2+(prod(a_minus)) + 2**(p_minus)/2
+    return (prod(a_plus)+2**(p_plus))/2+(prod(a_minus) + 2**p_minus)/2
 
 def Patrick_dim_GL2_skein_table(L):
     """
