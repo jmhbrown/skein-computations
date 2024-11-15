@@ -130,15 +130,15 @@ def change_ring(module,R=QQ):
 
     return module.V().change_ring(R).quotient(module.W().change_ring(R))
 
-def Monica_table(L,n):
+def Monica_table(L,n,take_coinvariants=True):
     """
     sage: gamma = SL2Z.1^4
-    sage: try_all_conjugacy_classes(gamma,5)
+    sage: try_all_conjugacy_classes(gamma,5,take_coinvariants)
 
     """
     conjugacy_classes = [cc.an_element() for cc in SymmetricGroup(n).conjugacy_classes()]
     
-    return table([[conjugacy_classes[0]] + conjugacy_classes] + [[l] + [get_cokernel(l,sigma).invariants() for sigma in conjugacy_classes] for l in L])
+    return table([[conjugacy_classes[0]] + conjugacy_classes] + [[l] + [get_cokernel(l,sigma,take_coinvariants).invariants() for sigma in conjugacy_classes] for l in L])
 
 
 def Blurange_table(L,n=8):
