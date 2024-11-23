@@ -109,8 +109,8 @@ def try_all_conjugacy_classes(gamma,n,take_coinvariants=True):
         co['torsion_dim'] = product(co['homology'].invariants())
     return cokernels
 
-def dim_skeinmod(gamma,n):
-    cokernels = try_all_conjugacy_classes(gamma,n,take_coinvariants=True)
+def dim_skeinmod(gamma,n,take_coinvariants=True):
+    cokernels = try_all_conjugacy_classes(gamma,n,take_coinvariants)
     sum = 0
     for co in cokernels:
         sum += co['torsion_dim']
@@ -141,7 +141,7 @@ def Monica_table(L,n,take_coinvariants=True):
     return table([[conjugacy_classes[0]] + conjugacy_classes] + [[l] + [get_cokernel(l,sigma,take_coinvariants).invariants() for sigma in conjugacy_classes] for l in L])
 
 
-def Blurange_table(L,n=8):
+def Blurange_table(L,n=8,take_coinvariants=True):
     """
     Parameters:
         L a vector of gammas in SL2
@@ -149,7 +149,7 @@ def Blurange_table(L,n=8):
     Returns:
         table nxdim(L) of the dimension of the gamma-twisted skein modules in GL_i
     """
-    return table([[l] + [dim_skeinmod(l,i) for i in IntegerRange(1,n+1)] for l in L], header_row=[i for i in IntegerRange(0,n+1)], frame = True)
+    return table([[l] + [dim_skeinmod(l,i,take_coinvariants) for i in IntegerRange(1,n+1)] for l in L], header_row=[i for i in IntegerRange(0,n+1)], frame = True)
 
 
 def get_dim_empty_skein ( gamma ):
