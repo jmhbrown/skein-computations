@@ -170,3 +170,15 @@ def Patrick_dim_GL2_skein_table(L):
         table dim(L) of the dimension of the gamma-twisted skein modules in GL_2 according to Patrick's paper
     """
     return table([[l] + [get_dim_empty_skein(l)] for l in L], frame = True)
+
+def Blue_table(L,n,take_coinvariants=True):
+    """
+    Exactly same as Monica_table + extra column containing |trace(gamma-id)|
+
+    sage: gamma = SL2Z.1^4
+    sage: try_all_conjugacy_classes(gamma,5,take_coinvariants)
+
+    """
+    conjugacy_classes = [cc.an_element() for cc in SymmetricGroup(n).conjugacy_classes()]
+    
+    return table([[conjugacy_classes[0]] + conjugacy_classes+ ["|trace(gamma-id)|"]] + [[l] + [get_cokernel(l,sigma,take_coinvariants).invariants() for sigma in conjugacy_classes]+ [abs(l[0,0]+l[1,1]-2)] for l in L])
