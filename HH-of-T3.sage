@@ -5,7 +5,7 @@ logging.basicConfig(level='INFO') # options: DEBUG, INFO, WARN, ERROR, CRITICAL
 logger = logging.getLogger(__name__)
 
 
-def W_rep(sigma):
+def W_rep(sigma): 
     """
     Makes a matrix representation of the Weyl group on the basis lattice.
     
@@ -54,7 +54,7 @@ def MCG_rep(gamma, n):
     return gamma.matrix().tensor_product(Matrix.identity(n))
 
 
-def get_cokernel(gamma,sigma,take_coinvariants=True):
+def get_cokernel(gamma,sigma,take_coinvariants=True): #OUTDATED
     """
     sage: gamma = SL2Z.0
     sage: sigma = SymmetricGroup(5).an_element()
@@ -88,7 +88,7 @@ def get_cokernel(gamma,sigma,take_coinvariants=True):
     return Uperp.quotient(submodule)
 
 
-def try_all_conjugacy_classes(gamma,n,take_coinvariants=True):
+def try_all_conjugacy_classes(gamma,n,take_coinvariants=True): #OUTDATED
     """
     sage: gamma = SL2Z.1^4
     sage: try_all_conjugacy_classes(gamma,5)
@@ -109,7 +109,7 @@ def try_all_conjugacy_classes(gamma,n,take_coinvariants=True):
         co['torsion_dim'] = product(co['homology'].invariants())
     return cokernels
 
-def dim_skeinmod(gamma,n,take_coinvariants=True):
+def dim_skeinmod(gamma,n,take_coinvariants=True): #OUTDATED
     cokernels = try_all_conjugacy_classes(gamma,n,take_coinvariants)
     sum = 0
     for co in cokernels:
@@ -130,7 +130,7 @@ def change_ring(module,R=QQ):
 
     return module.V().change_ring(R).quotient(module.W().change_ring(R))
 
-def Monica_table(L,n,take_coinvariants=True):
+def Monica_table(L,n,take_coinvariants=True): #OUTDATED
     """
     sage: gamma = SL2Z.1^4
     sage: try_all_conjugacy_classes(gamma,5,take_coinvariants)
@@ -141,7 +141,7 @@ def Monica_table(L,n,take_coinvariants=True):
     return table([[conjugacy_classes[0]] + conjugacy_classes] + [[l] + [get_cokernel(l,sigma,take_coinvariants).invariants() for sigma in conjugacy_classes] for l in L])
 
 
-def Blurange_table(L,n=8,take_coinvariants=True):
+def Blurange_table(L,n=8,take_coinvariants=True): #OUTDATED
     """
     Parameters:
         L a vector of gammas in SL2
@@ -171,7 +171,7 @@ def Patrick_dim_GL2_skein_table(L):
     """
     return table([[l] + [get_dim_empty_skein(l)] for l in L], frame = True)
 
-def Blue_table(L,n,take_coinvariants=True):
+def Blue_table(L,n,take_coinvariants=True): #OUTDATED
     """
     Exactly same as Monica_table + extra column containing |trace(gamma-id)|
 
