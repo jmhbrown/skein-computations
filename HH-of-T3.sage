@@ -183,6 +183,31 @@ def Blue_table(L,n,take_coinvariants=True): #OUTDATED
     
     return table([[conjugacy_classes[0]] + conjugacy_classes+ ["|trace(gamma-id)|"]] + [[l] + [get_cokernel(l,sigma,take_coinvariants).invariants() for sigma in conjugacy_classes]+ [abs(l[0,0]+l[1,1]-2)] for l in L])
 
+def get_cokernel_reduced(gamma,n):    
+    #get cokernel for a cycle of order n, using MOnica's Smith reduction.
+    lattice = FreeModule(ZZ,2)
+    omega = Matrix(ZZ,[[0,-1],[1,0]])
+    M = (Matrix.identity(2) - gamma^n)
+    U = M.right_kernel()
+    List = U.gens()
+    if List == ():
+        List=lattice.zero()
+    omega_on_U = omega*Matrix(List).transpose()
+    Uperp = omega_on_U.left_kernel()
+    sublattice_gens = M.columns()
+    submodule = lattice.submodule(sublattice_gens)
+    coker = Uperp.quotient(submodule) #up until here everything same as before
+    elts = list(coker)                #putting all elements of coker in a list
+    counter = 0                       #setting counter to zero
+    while elts != []:                 #we're gradually removing orbits from coker
+        counter = counter+1           #if we haven't removed everything yet, there's a new orbit to consider so +1
+        c = elts[0]                   #take first (remaining) element in coker
+        orbit = [ ((gamma.matrix())^i)*(c.lift()) for i in range(0,n)] #calculate orbit in Uperp, so first lift it
+        orbit_in_coker = [coker(i) for i in orbit] #project down to coker, (coker(i) projects from Uperp to quotient)
+        elts = [x for x in elts if x not in orbit_in_coker]#remove all elements in the orbit
+        #we cannot remove elements that are already gone, e.g. for zero element, orbit is a list of repeated entries of the zero element
+    return counter
+
 def get_cokernel_v2(gamma,sigma):
     
     n = sigma.parent().degree()
