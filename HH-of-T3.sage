@@ -144,7 +144,7 @@ def Monica_table(L,n,take_coinvariants=True): #OUTDATED
 def Blurange_table(L,n=8,take_coinvariants=True): #OUTDATED
     """
     Parameters:
-        L a vector of gammas in SL2
+        L a list of gammas in SL2
         n: table for GL_i from 1 to n
     Returns:
         table nxdim(L) of the dimension of the gamma-twisted skein modules in GL_i
@@ -209,6 +209,15 @@ def get_cokernel_reduced(gamma,n):
     return counter
 
 def get_cokernel_v2(gamma,sigma):
+    """
+    sage: gamma = SL2Z.0
+    OR
+    sage: C = Matrix(ZZ, [[2, 3], [1, 2]])
+    sage: gamma = SL2Z(C)
+    
+    sage: W = SymmetricGroup(6)
+    sage: sigma =W([(1,2),(3,4,5)])
+    """
     
     n = sigma.parent().degree()
     omega = matrix.block([[0,-Matrix.identity(n)],[Matrix.identity(n),0]])
@@ -245,9 +254,13 @@ def get_cokernel_v2(gamma,sigma):
 
 def Monica_table_v2(L,n): #Monica table with coker with coinvar calculated via brute forcing, counting orbits
     """
-    sage: gamma = SL2Z.1^4
-    sage: try_all_conjugacy_classes(gamma,5,take_coinvariants)
-
+    L is list of elements of SL2Z
+    sage: gamma1 = SL2Z.0
+    sage: C = Matrix(ZZ, [[2, 3], [1, 2]])
+    sage: gamma2 = SL2Z(C)
+    sage: L = [gamma1,gamma2]
+    
+    n is positive integer
     """
     conjugacy_classes = [cc.an_element() for cc in SymmetricGroup(n).conjugacy_classes()]
     
@@ -255,6 +268,14 @@ def Monica_table_v2(L,n): #Monica table with coker with coinvar calculated via b
 
 def Monica_conjecture(gamma,m):
     #Monica's conjecture for dim HH_0 with take coinvar True for a single m-cycle. IMPORTANT: only works if gamma^m-I is invertible
+    """
+    sage: gamma = SL2Z.0
+    OR
+    sage: C = Matrix(ZZ, [[2, 3], [1, 2]])
+    sage: gamma = SL2Z(C)
+    
+    m is positive integer
+    """
     result = 0
     I = identity_matrix(2)
     for d in divisors(m):
@@ -264,6 +285,14 @@ def Monica_conjecture(gamma,m):
 
 def skein_mod_dim(gamma,n):
     #gives  GLn skein module dimension, using Monica's conjecture #only works for regular gamma!!!
+    """
+    sage: gamma = SL2Z.0
+    OR
+    sage: C = Matrix(ZZ, [[2, 3], [1, 2]])
+    sage: gamma = SL2Z(C)
+    
+    n is positive integer
+    """
     single_cycle = [0]*(n+1)                         #calculate result for single m-cycle (more efficient to do it once in the beginning)
     for i in range(1,n+1):                           #m ranging from 1 till n
         single_cycle[i] = Monica_conjecture(gamma,i) #using Monica's conjecture
@@ -282,7 +311,16 @@ def skein_mod_dim(gamma,n):
     endresult = sum(result_per_conjugacyclass)       #sum each contribution HH_0 with coinvar together to get end result
     return endresult
 
-def get_cokernel_v3(gamma,sigma): #calculates HH_0 with coinvar for given gamma and sigma. Note this one is not exactly used in skein_mod_dim for effciency reasons. But it does exactly the same thing as what is happening there. 
+def get_cokernel_v3(gamma,sigma): #calculates HH_0 with coinvar for given gamma and sigma. Note this one is not exactly used in skein_mod_dim for effciency reasons. But it does exactly the same thing as what is happening there.
+    """
+    sage: gamma = SL2Z.0
+    OR
+    sage: C = Matrix(ZZ, [[2, 3], [1, 2]])
+    sage: gamma = SL2Z(C)
+    
+    sage: W = SymmetricGroup(6)
+    sage: sigma =W([(1,2),(3,4,5)])
+    """
     n = sigma.parent().degree()
     cycle_type = list(sigma.cycle_type())
     count = [0]*(n+1)
@@ -296,16 +334,28 @@ def get_cokernel_v3(gamma,sigma): #calculates HH_0 with coinvar for given gamma 
 
 def Monica_table_v3(L,n): #Monica table with coker with coinvar calculated via Monica's conjecture
     """
-    sage: gamma = SL2Z.1^4
-    sage: try_all_conjugacy_classes(gamma,5,take_coinvariants)
-
+    L is list of elements of SL2Z
+    sage: gamma1 = SL2Z.0
+    sage: C = Matrix(ZZ, [[2, 3], [1, 2]])
+    sage: gamma2 = SL2Z(C)
+    sage: L = [gamma1,gamma2]
+    
+    n is positive integer
     """
     conjugacy_classes = [cc.an_element() for cc in SymmetricGroup(n).conjugacy_classes()]
     
     return table([[conjugacy_classes[0]] + conjugacy_classes] + [[l] + [get_cokernel_v3(l,sigma) for sigma in conjugacy_classes] for l in L])
 
-def gen_fct(gamma,n): 
+def gen_fct(gamma,n):
     #generating function up to and including t^n, brute forcing
+    """
+    sage: gamma = SL2Z.0
+    OR
+    sage: C = Matrix(ZZ, [[2, 3], [1, 2]])
+    sage: gamma = SL2Z(C)
+
+    n is positive integer
+    """
     Q.<t> = LazyPowerSeriesRing(SR)
     f=1
     for i in range(1,n+1):
@@ -313,6 +363,14 @@ def gen_fct(gamma,n):
     return f
 
 def solve_for_ansatz_v3(gamma, N): # input N is the highest power of t we want to consider
+    """
+    sage: gamma = SL2Z.0
+    OR
+    sage: C = Matrix(ZZ, [[2, 3], [1, 2]])
+    sage: gamma = SL2Z(C)
+
+    N is positive integer
+    """
     c = var(['c{}'.format(i-1) for i in range(1, N+2)]) # create the variables c_i (such that c_i = c[i])
     h = gen_fct(gamma,N) # our generating function brute force calculated up to t^N
     G = Q.prod(lambda n: ((1 - t**n)**(-1))**(c[n]), range(1, N+1)) # the ansatz, product up to and including N
