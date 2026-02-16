@@ -376,3 +376,66 @@ def solve_for_ansatz_v3(gamma, N): # input N is the highest power of t we want t
     G = Q.prod(lambda n: ((1 - t**n)**(-1))**(c[n]), range(1, N+1)) # the ansatz, product up to and including N
     eqs = [h[k] == G[k] for k in range(0,N+1)] # equating the coefficients
     return solve(eqs,c) #solve for c_i
+
+def skein_partition_function(gamma,d):
+    #gives skein paritition function up to degree d and exponents of euler expansion c_k up to k=d.
+    """
+    sage: gamma = SL2Z.0
+    OR
+    sage: C = Matrix(ZZ, [[2, 3], [1, 2]])
+    sage: gamma = SL2Z(C)
+
+    d is positive integer
+    """
+    c = []
+    order = multiplicative_order(gamma)
+    if hasattr(gamma, "matrix"):
+        gamma = gamma.matrix()
+    if order ==4:
+        for k in range(1,d+1):
+            if k%order == 0:
+                c.append(1)
+            else:
+                c.append(Monica_conjecture(gamma,k))
+    elif order ==6:
+        for k in range(1,d+1):
+            if k%order == 0:
+                c.append(1)
+            else:
+                c.append(Monica_conjecture(gamma,k))
+    elif order ==3:
+        for k in range(1,d+1):
+            if k%order == 0:
+                c.append(1)
+            else:
+                c.append(Monica_conjecture(gamma,k))
+    elif order ==1:
+        for k in range(1,d+1):
+            c.append(1)
+    elif order ==2:
+        for k in range(1,d+1):
+            if k%order == 0:
+                c.append(1)
+            else:
+                c.append(Monica_conjecture(gamma,k))
+    elif order == Infinity:
+        M = gamma-identity_matrix(2)
+        absm = gcd([M[0,0],M[0,1],M[1,0],M[1,1]])
+        if gamma.trace() == 2:
+            for k in range(1,d+1):
+                    c.append(absm*k)
+        elif gamma.trace() ==-2:
+            for k in range(1,d+1):
+                if k%2 == 0:
+                    c.append(absm*k/2+1)
+                else:
+                    c.append(4)
+        else: 
+            for k in range(1,d+1):
+                c.append(Monica_conjecture(gamma,k))
+    skein_partition_fct = 1
+    for k in range(1,d+1):
+        skein_partition_fct = skein_partition_fct*((1-x^k)**(-c[k-1]))
+    
+    print(c)
+    print(skein_partition_fct.taylor(x,0,d))
